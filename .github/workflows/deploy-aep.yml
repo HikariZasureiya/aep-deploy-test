@@ -1,40 +1,39 @@
 name: Deploy AEP Package to target sandbox
 
 on:
-    push:
-        branches:
-            - main
-        paths:
-            - 'package/package.json'
-    workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'package/package.json'
+  workflow_dispatch:
 
 jobs:
-    deploy-aep-package:
-        name: Execute AEP Package Deployment
-        runs-on: ubuntu-latest
+  deploy-aep-package:
+    name: Execute AEP Package Deployment
+    runs-on: ubuntu-latest
 
-        steps:
-            #check out repo code
-            - name: Checkout Code
-              uses: actions/checkout@v4
-            
-            - name: setup python 3.10
-              uses: actions/setup-python@v5
-              with:
-                python-version: '3.10'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-            - name:  Install dependencies
-              run: |
-                python -m pip install --upgrade pip
-                pip install aepp python-dotenv
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-            - name: Exxwecute AEP Deployment script
-            env:
-                AEP_CLIENT_ID: ${{ secrets.AEP_CLIENT_ID }}
-                AEP_CLIENT_SECRET: ${{ secrets.AEP_CLIENT_SECRET }}
-                AEP_IMS_ORG_ID: ${{ secrets.AEP_IMS_ORG_ID }}
-                AEP_TECHNICAL_ACCOUNT_ID: ${{ secrets.AEP_TECHNICAL_ACCOUNT_ID }}
-                AEP_SOURCE_SANDBOX: ${{ secrets.AEP_SOURCE_SANDBOX }}
-                AEP_TARGET_SANDBOX: ${{ secrets.AEP_TARGET_SANDBOX }}
-            run: |
-                python deploy.py
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install aepp python-dotenv
+
+      - name: Execute AEP Deployment script
+        env:
+          AEP_CLIENT_ID: ${{ secrets.AEP_CLIENT_ID }}
+          AEP_CLIENT_SECRET: ${{ secrets.AEP_CLIENT_SECRET }}
+          AEP_IMS_ORG_ID: ${{ secrets.AEP_IMS_ORG_ID }}
+          AEP_TECHNICAL_ACCOUNT_ID: ${{ secrets.AEP_TECHNICAL_ACCOUNT_ID }}
+          AEP_SOURCE_SANDBOX: ${{ secrets.AEP_SOURCE_SANDBOX }}
+          AEP_TARGET_SANDBOX: ${{ secrets.AEP_TARGET_SANDBOX }}
+        run: |
+          python deploy.py
